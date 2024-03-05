@@ -1,0 +1,9 @@
+[workspace]
+[package]
+version = "0.1.0"
+name = "maya-img-program"
+edition = "2021"
+
+[dependencies]
+sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git" }
+image = "0.25.0-preview.0"
