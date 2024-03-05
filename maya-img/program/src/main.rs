@@ -2,11 +2,9 @@ use image::{GenericImageView, Pixel};
 
 pub fn main() {
     let original_img_buf = sp1_zkvm::io::read::<Vec<u8>>();
-    println!("done 1");
-
     let final_img_buf = sp1_zkvm::io::read::<Vec<u8>>();
-    println!("done 2");
 
+    // Original image
     let original_img = image::load_from_memory(&original_img_buf).expect("load original image");
 
     let (original_width, original_height) = original_img.dimensions();
@@ -27,6 +25,7 @@ pub fn main() {
         original_pixel_values.push(row);
     }
 
+    // Final image
     let final_img = image::load_from_memory(&final_img_buf).expect("load final image");
 
     let (final_width, final_height) = final_img.dimensions();
@@ -55,6 +54,7 @@ pub fn main() {
     }
 }
 
+// is_cropped returns true if arr2 is a cropped version of arr1.
 fn is_cropped(arr1: &Vec<Vec<Vec<u8>>>, arr2: &Vec<Vec<Vec<u8>>>, x: usize, y: usize) -> bool {
     let height2 = arr2.len();
     let width2 = arr2[0].len();
