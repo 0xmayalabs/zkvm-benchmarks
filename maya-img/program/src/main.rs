@@ -1,6 +1,45 @@
-use image::{GenericImageView, Pixel};
+use image::{GenericImageView, ImageBuffer, imageops, Pixel, RgbImage};
 
 pub fn main() {
+    // crop_zk_circuit();
+    crop_transformation();
+}
+
+// crop_transformation crops an image and proves the computation of cropping.
+fn crop_transformation() {
+    let img_buf = sp1_zkvm::io::read::<Vec<u8>>();
+    let old_width = sp1_zkvm::io::read::<u32>();
+    let old_height = sp1_zkvm::io::read::<u32>();
+    let new_width = sp1_zkvm::io::read::<u32>();
+    let new_height = sp1_zkvm::io::read::<u32>();
+
+    // crop image.
+    println!("Before reading image");
+    println!("width: {:?}", old_width);
+    println!("height: {:?}", old_height);
+    println!("img_buf.len(): {:?}", img_buf.len());
+    let img: RgbImage = ImageBuffer::from_raw(old_width, old_height, img_buf).unwrap();
+    println!("Finished reading image");
+
+    let mut transformed_img = img;
+    transformed_img = imageops::crop(
+        &mut transformed_img,
+        0,
+        0,
+        new_width,
+        new_height,
+    ).to_image();
+
+    let img_buffer = transformed_img.as_raw();
+
+    // Write back cropped image.
+    sp1_zkvm::io::write(&img_buffer);
+    sp1_zkvm::io::write(&new_width);
+    sp1_zkvm::io::write(&new_height);
+}
+
+// crop_zk_circuit implements the ZK circuit to prove crop transformation.
+fn crop_zk_circuit() {
     let original_img_buf = sp1_zkvm::io::read::<Vec<u8>>();
     let final_img_buf = sp1_zkvm::io::read::<Vec<u8>>();
 
